@@ -1,4 +1,4 @@
-function component(name, path, {extendTagName = null, fallback = "", state = {}} = {} ) {
+function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
     // Get tag type from extendTagName
     let extendTagClass = extendTagName === null ? HTMLElement : document.createElement(extendTagName).constructor;
 
@@ -9,10 +9,9 @@ function component(name, path, {extendTagName = null, fallback = "", state = {}}
 
         constructor() {
             super();
-            this.scriptsRun = false;
+            this.scriptsRan = false;
 
-            this.state = structuredClone(state);
-            this.onCreate = () => {};
+            this.state = {};
             this.onRerender = () => {};
             this.onDestroy = () => {};
         }
@@ -21,44 +20,41 @@ function component(name, path, {extendTagName = null, fallback = "", state = {}}
             // Clear old content
             this.innerHTML = "";
 
+
             // Parse raw contents into a DOM
             const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html");
 
-            // Preprocess HTML string contents and run scripts
+
+            // Extract and run scripts
+            const scripts = DOM.querySelectorAll("script");
+
+            if (!this.scriptsRan) {
+                scripts.forEach(script => {
+                    new Function("component", "state", script.textContent)(this, this.state);        // TODO: error handling?
+                });
+            }
+
+            scripts.forEach(s => s.remove());
+
+            this.scriptsRan = dynamicExtend.fetchRan && true;
+
+
+            // Preprocess HTML string contents and append to dom
             (DOM.body.childNodes).forEach(n => {
-                if (!["SCRIPT", "STYLE"].includes(n.tagName) && n.nodeType === Node.ELEMENT_NODE) {     // Preprocessing non-"code" children - replacing {} with the resulting JS
+                if (n.nodeType == Node.ELEMENT_NODE)
                     n.innerHTML = n.innerHTML.replace(/\{([^}]+)\}/g, (_, expr) => {    // TODO: error handling?
                         return new Function("component", "state", `return (${expr})`)(this, this.state);
                     });
-                } else {    // Otherwise, run the scripts and delete the tags
-                    if (!this.scriptsRun) {
-                        const scripts = DOM.querySelectorAll("script");
 
-                        scripts.forEach(script => {
-                            new Function("component", "state", script.textContent)(this, this.state);        // TODO: error handling?
-                            script.remove();
-                        });
-                    }
-
-                }
+                this.appendChild(n.cloneNode(true));
             });
 
-            if (dynamicExtend.fetchRan && !this.scriptsRun)         // Re-run onCreate when the content is avaliable
-                this.onCreate.call(this);
-
-            this.scriptsRun = dynamicExtend.fetchRan && true;
-            
-            // Append each node of this DOM to the instance of the tag
-            (DOM.body.childNodes).forEach(node => {
-                this.appendChild(node.cloneNode(true));
-            });
 
             // Run rerender
             this.onRerender.call(this);
         }
         
         connectedCallback() {
-            this.onCreate.call(this);
             this.rerender();
         }
 
