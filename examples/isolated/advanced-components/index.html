@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ok</title>
+        <script src="../../../omf.js"></script>
+        <script>
+            component("omf-comp", "./component.html");    // Using the `is=` syntax may work better with some browsers, to use it you define extendTagName
+        </script>
+    </head>
+
+    <body>
+        <omf-comp id="target"></omf-comp>
+        <button onclick="document.getElementById('target').remove()">Destroy element</button>
+    </body>
+</html>

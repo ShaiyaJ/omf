@@ -1,0 +1,10 @@
+<div>
+    <p>I'm from the first component!</p>
+    <omf-two></omf-two>
+    <omf-three></omf-three>
+</div>
+
+<script>
+    // This comes with a big disadvantage, using the component more than twice will redefine omf-two, which will cause an error.
+    component("omf-two", "./component2.html");    // This is lazily loaded - the component is only called into scope when the parent component is used
+</script>

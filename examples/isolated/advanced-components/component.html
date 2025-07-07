@@ -1,0 +1,22 @@
+<div>
+    <p>I'm a reusable component</p>
+</div>
+
+<script>
+    // The "BASE" will be logged once in the console when the instance is first loaded
+    // It will run once for each instance
+    // Typically this is the place where you will set the component state
+    console.log("BASE");
+    
+    // The onRerender function runs each time the component is reloaded
+    // This will typically be where you put "bindings"/events. As each reload creates a new element, it needs to be rebound.
+    instance.onRerender = () => {
+        console.log("RERENDER");
+    }
+    
+    // The onDestroy function runs when the component is called when the custom element is disconnected from the document DOM (removed or hidden)
+    // You can use this for "cleanup"
+    instance.onDestroy = () => {
+        console.log("DESTROY");
+    }
+</script>

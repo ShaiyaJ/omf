@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ok</title>
+        <script src="../../../omf.js"></script>
+        <script>
+            /* One More Framework as a single function that is used to register a component that you will use in the file
+            this function is called `component()` - and it takes three arguments
+            1. A name for the component to go by
+            2. The path to the file containing the component
+            3. (Optional) An object of optional values
+            
+            Here we define the html at `./component.html` as `omf-comp` - and then we can use it as a HTML tag.
+            
+            The optional values are as follows:
+                extendTagName (default: null)
+            This allows you to use the `is=` syntax to use components, which makes some parsers happier. So, if I set extendTagName to "p" - I could then use my component with `<p is="omf-comp"></p>` instead of `<omf-comp></omf-comp>`
+                fallback (default: "")
+            This allows you to define text (or inlined HTML) to use as a fallback if fetching the target HTML fails. 
+            In this example, if the fetch to `./component.html` fails, it displays fallback's default value (an empty string).*/
+            component("omf-comp", "./component.html");
+        </script>
+    </head>
+
+    <body>
+        <omf-comp></omf-comp>
+        <omf-comp></omf-comp>
+    </body>
+</html>

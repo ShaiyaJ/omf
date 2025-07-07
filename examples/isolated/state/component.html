@@ -1,0 +1,17 @@
+<div>
+    <p>{state.x}</p>
+    <button class="stateu">+</button>
+</div>
+
+<script>
+    Object.assign(state, {x: 0});                       // State cannot be initialised directly - you must use Object.assign
+                                                        // You can also access global resources from here
+
+    instance.onRerender = () => {
+        const x = instance.querySelector(".stateu");    // You cannot use .getElementById if the component is being used more than once
+        x.addEventListener("click", () => {             // Bind "controls" in the onRerender function
+            state.x++;                                  // `state` points to component.state, it can be manipulated directly
+            instance.rerender();                        // `instance` is the instance of the component, you can call rerender manually
+        });                                             // rerender won't be called for you
+    }
+</script>

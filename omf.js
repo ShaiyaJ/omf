@@ -30,7 +30,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
 
             if (!this.scriptsRan) {
                 scripts.forEach(script => {
-                    new Function("component", "state", script.textContent)(this, this.state);        // TODO: error handling?
+                    new Function("instance", "state", script.textContent)(this, this.state);        // TODO: error handling?
                 });
             }
 
@@ -43,7 +43,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             (DOM.body.childNodes).forEach(n => {
                 if (n.nodeType == Node.ELEMENT_NODE)
                     n.innerHTML = n.innerHTML.replace(/\{([^}]+)\}/g, (_, expr) => {    // TODO: error handling?
-                        return new Function("component", "state", `return (${expr})`)(this, this.state);
+                        return new Function("instance", "state", `return (${expr})`)(this, this.state);
                     });
 
                 this.appendChild(n.cloneNode(true));
