@@ -25,16 +25,17 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html");
 
 
-            // Extract and run scripts
+            // Extract and run scripts and styles
             const scripts = DOM.querySelectorAll("script");
+            const styles = DOM.querySelectorAll("style");
 
             if (!this.scriptsRan) {
-                scripts.forEach(script => {
-                    new Function("instance", "state", script.textContent)(this, this.state);        // TODO: error handling?
-                });
+                scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state))        // TODO: error handling?
+                styles.forEach(style => document.body.appendChild(style.cloneNode(true)))
             }
 
             scripts.forEach(s => s.remove());
+            styles.forEach(s => s.remove());
 
             this.scriptsRan = dynamicExtend.fetchRan && true;
 
@@ -63,6 +64,13 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
         }
     }
 
+    // Define element function
+    const define = () => {
+        if (extendTagName === null)
+            customElements.define(name, dynamicExtend);
+        else 
+            customElements.define(name, dynamicExtend, { extends: extendTagName });
+    };
 
     // Creating the customElement 
     fetch(path)
@@ -80,13 +88,8 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
                 return;
 
             dynamicExtend.raw = raw;
-        }).then(_ => {              // Define the custom element
-            if (extendTagName === null)
-                customElements.define(name, dynamicExtend);
-            else 
-                customElements.define(name, dynamicExtend, { extends: extendTagName });
-        });
-
+        }).then(define) // Define the custom element
+        .catch(define);
 
     // Async fetch breaks component display - manually upgrade to return display to normal
     return customElements.whenDefined(name).then(() => {

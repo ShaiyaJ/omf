@@ -1,0 +1,36 @@
+<div id="comp">
+    <style>
+        /* Style tags aren't locally scoped, so any style you write in here will apply to the entire document */
+        /* You can refer to elements of the document (like the button) through class or id */
+        .stateu {
+            background-color: red;
+        }
+        
+        /* Although, the cleanest way to apply styles to components is to give the outer div an id attribute, and refer to each element like that */
+        /* This emulates a "locally scoped style" - as browsers have little support for @scope */
+        #comp .stateu {
+            border-radius: 5px;
+        }
+        
+        #comp {
+            border-width: 5px;
+            border-color: black;
+            border-style: solid;
+        }
+    </style>
+
+    <p>{state.x}</p>
+    <button class="stateu">+</button>
+</div>
+
+<script>
+    Object.assign(state, {x: 0});
+
+    instance.onRerender = () => {
+        const x = instance.querySelector(".stateu");
+        x.addEventListener("click", () => { 
+            state.x++; 
+            instance.rerender(); 
+        }); 
+    }
+</script>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ok</title>
+        <script src="../../../omf.js"></script>
+        <script>
+            /* Sometimes the component you're attempting to fetch will fail, in this case it's useful to provide the fallback option to display some content in its place */
+            component("omf-comp", "./component.html", {fallback: "Error!"});            // Example of plaintext fallback
+            component("omf-two", "./component.html", {fallback: "<h1>Error!</h1>"});    // Example of HTML fallback
+        </script>
+    </head>
+
+    <body>
+        <omf-comp></omf-comp>
+        <omf-two></omf-two>
+    </body>
+</html>
