@@ -1,6 +1,6 @@
 <div align="center">
-# One More Framework
-A ~100 line JavaScript frontend framework inspired by the likes of Raylib. 
+    <h1>One More Framework</h1>
+    <p>--A ~100 line JavaScript frontend framework inspired by the likes of Raylib--</p>
 </div>
 
 ## About
