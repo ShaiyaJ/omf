@@ -1,16 +1,34 @@
+<div align="center">
 # One More Framework
 A ~100 line JavaScript frontend framework inspired by the likes of Raylib. 
+</div>
 
-Give you the power of components and some local state, allowing you to just program nicely in pure JavaScript. 
+## About
+One More Framework (or OMF) is a super-lightweight frontend framework that fits in under 100 lines of JavaScript. It has no dependencies on any other JavaScript library.
 
-It doesn't use NPM. It doesn't have megabytes of dependencies. It's all a single function to register where components are stored and native web components. You don't need hours of tutorials to learn how to use it. JavaScript comes prepackaged with the tools for most jobs anyway.
+It was inspired by how components are organised in [Svelte](https://svelte.dev/) and how simple libraries like [Raylib](https://www.raylib.com/) and [Macroquad](https://macroquad.rs/) are for game development.
 
-This isn't suitable for targeting older browsers, due to it's dependency on the web component API.
+Most frontend frameworks have a dependency on NPM and, especially for smaller apps, include a *lot* of bloat. OMF aims to be a framework where the source code is so small you can just copy and paste it into a `<script>` tag. 
 
-The original reason for One More Framework was just to have elements like a Navbar be stored in a separate place and changes to be propagated through every page with a single change (basically - HTML with the DRY principle). I originally achieved this by having the "component" fetched with HTMX, but I realised I could do one better if I relied on JavaScript.
+### What do you get?
+Components, with local state, a `.rerender` function and lifecycle hooks `.onRerender` and `.onDestory` (and, in a way, "onCreate").
 
-# This framework is undergoing heavy development in order to ensure it is as light but feature-filled as possible. Changes are expected to happen.
-## Planned Changes
-- Re-evaluation on the way `fallback` works.
-- Re-evaluation for the need of local state being tied to the component
-- Making scripts throw custom errors rather than browser-default ones
+That's what you get. 
+
+OMF is built for smaller websites and apps. It's not *impossible* to make smaller apps with it, but you'll be expected to provide functionality for things yourself (in a similar philosophy to Raylib and Macroquad). This is what makes OMF so light.
+
+## Use
+To use OMF, include the source in a `<script>` tag in the `head` of your document. You can do this either by using the Github repo as a `src=` or by copy and pasting the source code directly into it.
+
+Register components with `component(name, path)`.
+
+Then use your components by doing `<name></name>`.
+
+To write a component, open a new file and write HTML as you normally would (just without any boilerplate) - then inside a `script` tag you can assign functions to the lifecycle hooks and write code to run on component creation.
+
+**To learn how to use OMF properly, refer to the examples (at `/examples`) or the docs (at `/docs` or on the [Github Page site](https://ShaiyaJ.github.io/omf/))**
+
+## Licence
+This project is under the MIT Licence. This means you can copy, modify, redistribute, without any need for credit, etc.
+
+See `/LICENSE` for details.
