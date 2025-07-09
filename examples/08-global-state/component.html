@@ -1,0 +1,26 @@
+<div>
+    <p>{window.state.x}</p>
+    <button class="stateu">+</button>
+</div>
+
+<script>
+    /* Sometimes you might want components to have "global state". This is an issue that comes in two parts */
+    
+    /* The first part is accessing global state. This could be a shared reference to the same object using Object.assign, or you can do something like this to create a globally accessible state in a place like window: */
+    window.state = window.state ? window.state : {x: 0};    // This, of course, comes with the downside of polluting window with a new object
+                                                            // There are many different ways you can do this in JavaScript, and you will have to pick the way that suits your project and design goals best.
+
+    /* The second part of the problem is reacting to state changes. If you only need components to share the same data, you can stop here. But if you need them to display the same data, you need to find a way to track changes in global state. */
+    document.addEventListener("rerender", () => instance.rerender());    // You can do this with event listeners, but again doing this will cause you to pollute document 
+
+    instance.onRerender = () => {
+        const x = instance.querySelector(".stateu");
+        x.addEventListener("click", () => { 
+            window.state.x++; 
+            document.dispatchEvent(new Event("rerender")); 
+        }); 
+    }
+    
+    /* Another way you could achieve this is through tracking "listeners" inside your shared state instance. On component load you add to the "listeners" and on component destory you remove the "listener". Then, when state is mutated you iterate through these listeners and call .rerender on all of them. */ 
+    /* Again, there are many ways you can "listen" to changes, and you will have to pick the one that suits your project best. */
+</script>
