@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>One More Framework</h1>
+    <h1>🌐 One More Framework 🌐</h1>
     <p>--A ~100 line JavaScript frontend framework inspired by the likes of Raylib--</p>
 </div>
 
@@ -15,7 +15,9 @@ Components, with local state, a `.rerender` function and lifecycle hooks `.onRer
 
 That's what you get. 
 
-OMF is built for smaller websites and apps. It's not *impossible* to make smaller apps with it, but you'll be expected to provide functionality for things yourself (in a similar philosophy to Raylib and Macroquad). This is what makes OMF so light.
+OMF is built for smaller websites and apps. It's not *impossible* to make larger apps with it, but you'll be expected to provide functionality for things yourself (in a similar philosophy to Raylib and Macroquad). Most noteably **sharing/syncing state between components**. This is what makes OMF so light.
+
+However, there is a silver lining. This means you can choose an approach that works best for your project - rather than relying on what the authors of a framework *think* suits your project best. 
 
 ## Use
 To use OMF, include the source in a `<script>` tag in the `head` of your document. You can do this either by using the Github repo as a `src=` or by copy and pasting the source code directly into it.
@@ -26,9 +28,11 @@ Then use your components by doing `<name></name>`.
 
 To write a component, open a new file and write HTML as you normally would (just without any boilerplate) - then inside a `script` tag you can assign functions to the lifecycle hooks and write code to run on component creation.
 
-**To learn how to use OMF properly, refer to the examples (at `/examples`) or the docs (at `/docs` or on the [Github Page site](https://ShaiyaJ.github.io/omf/))**
+**To learn how to use OMF properly, refer to the examples (at `/examples`) or the docs (at `/docs` or on the [Github Page site](https://ShaiyaJ.github.io/omf/))**, experienced developers can probably get away with just using `/examples` as a reference guide. 
 
 ## Licence
-This project is under the MIT Licence. This means you can copy, modify, redistribute, without any need for credit, etc.
+This project is under the MIT Licence. This means you can copy, modify, redistribute, etc. - without any need for credit.
+
+Credit is appreciated, but obviously not required. 
 
 See `/LICENSE` for details.
