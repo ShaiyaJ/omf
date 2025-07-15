@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>ok</title>
+        <script src="../../omf.js"></script>
+        <script>
+            /* In the event that you do not have access to a local http server, or just don't wish to use one, you can use the "fallback" field to serve static content. */
+            /* This is very useful if you don't want the client to repeatedly fetch components from your server (which could be useful for fully offline apps), but you lose the main benefit of OMF - which is having separate HTML files for components. You also lose syntax highlighting in most editors. */
+            /* For single page apps, components can be inlined inside a script tag after including omf.js, like so: */
+            const STATICCONTENT = `
+<div>
+    <p>{state.x}<\/p>
+    <button class="stateu">+</button>
+<\/div>
+
+<script>
+    Object.assign(state, {x: 0});
+
+    instance.onRerender = () => {
+        const x = instance.querySelector(".stateu"); 
+        x.addEventListener("click", () => { 
+            state.x++;  
+            instance.rerender();  
+        }); 
+    }
+<\/script>`;
+
+            component("omf-comp", null, {fallback: STATICCONTENT});     // To denote the component's special static status we pass null as the path
+        </script>
+        
+        <!-- omf-two gives an alternative way to approach the issue of having no separate HTML files, by attempting to store the component in component.js, and adding a script tag to import it -->
+        <!-- However this also loses syntax highlighting. It is just one way to attempt to have a serverless environment. Both methods come with drawbacks. -->
+        <script src="./component.js"></script>
+    </head>
+
+    <body>
+        <omf-comp></omf-comp>
+        <omf-two></omf-two>
+    </body>
+</html>

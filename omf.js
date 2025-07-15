@@ -64,32 +64,37 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
         }
     }
 
-    // Define element function
-    const define = () => {
+
+    // Define element helper function
+    const define = (raw) => {
+        dynamicExtend.raw = raw;
+        dynamicExtend.fetchRan = true;
+        
         if (extendTagName === null)
             customElements.define(name, dynamicExtend);
         else 
             customElements.define(name, dynamicExtend, { extends: extendTagName });
     };
 
+
     // Creating the customElement 
-    fetch(path)
-        .then(res => {              // Fetch content
-            if (res.ok)
-                return res.text();
-            else {
-                throw new Error(`Status from component ${name} at location ${path} threw ${res.status}`);
-                return null;
-            }
-        }).then(raw => {            // Retroactively add content to DYNEX 
-            dynamicExtend.fetchRan = true;
-
-            if (raw === null)
-                return;
-
-            dynamicExtend.raw = raw;
-        }).then(define) // Define the custom element
-        .catch(define);
+    if (path != null) 
+        fetch(path)
+            .then(res => {              // Fetch content
+                if (res.ok)
+                    return res.text();
+                else {
+                    throw new Error(`Status from component ${name} at location ${path} threw ${res.status}`);
+                    return null;
+                }
+            }).then(raw => {            // Retroactively add content to DYNEX 
+                if (raw == null)    
+                    return;
+                define(raw);            // Define the custom element using the helper function
+            }).catch(() => define(fallback))
+    else { 
+        define(fallback);
+    }
 
     // Async fetch breaks component display - manually upgrade to return display to normal
     return customElements.whenDefined(name).then(() => {
