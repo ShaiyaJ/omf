@@ -1,3 +1,19 @@
+function filterComment(raw) {
+    const DOM = new DOMParser().parseFromString(raw, "text/html"); 
+    
+    const walker = document.createTreeWalker(DOM.body, NodeFilter.SHOW_COMMENT); 
+    let node;
+    let commentNodes = [];
+            
+    while (node = walker.nextNode()) {
+        commentNodes.push(node);
+    }
+            
+    commentNodes.forEach(n => n.remove());
+    
+    return DOM.body.innerHTML;
+}
+
 function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
     // Get tag type from extendTagName
     let extendTagClass = extendTagName === null ? HTMLElement : document.createElement(extendTagName).constructor;
@@ -5,7 +21,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
     // Create dynamic object
     const dynamicExtend = class DYNAMICEX extends extendTagClass {
         static fetchRan = false;    // Updates to true when fetch runs (not necessarily successfully)
-        static raw = fallback;
+        static raw = filterComment(fallback);
 
         constructor() {
             super();
@@ -24,17 +40,6 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
 
             // Parse raw contents into a DOM 
             const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html"); 
-            
-            // Filter comments out of the DOM (avoids eval errors)
-            const walker = document.createTreeWalker(DOM.body, NodeFilter.SHOW_COMMENT);        // TODO: move this outside and cache the result
-            let node;
-            let commentNodes = [];
-            
-            while (node = walker.nextNode()) {
-                commentNodes.push(node);
-            }
-            
-            commentNodes.forEach(n => n.remove());
 
 
             // Extract and run scripts and styles
@@ -42,9 +47,9 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             const styles = DOM.querySelectorAll("style");
 
             if (!this.scriptsRan) {
-                scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state))        // TODO: error handling?
+                scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state));        // TODO: error handling?
                 
-                styles.forEach(style => document.body.appendChild(style.cloneNode(true)))
+                styles.forEach(style => document.body.appendChild(style.cloneNode(true)));
             }
 
             scripts.forEach(s => s.remove());
@@ -81,7 +86,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
 
     // Define element helper function
     const define = (raw) => {
-        dynamicExtend.raw = raw;
+        dynamicExtend.raw = filterComment(raw);
         dynamicExtend.fetchRan = true;
         
         if (extendTagName === null) {
