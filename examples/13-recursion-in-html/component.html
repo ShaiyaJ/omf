@@ -8,6 +8,18 @@
         ${state.example.map(x => `<li>${x}</li>`).join("")}
     </ol>
     
+    <!-- These can go as deep as you need -->
+    <!-- But after a certain point this becomes difficult to read however -->
+    <p>
+        ${state.example.map(x => {
+            const f = (p) => {return p + "="};
+            
+            return `
+                <b>${f(x) + "_"}</b>
+            `
+        })}
+    </p>
+    
 </div>
 
 <script>
