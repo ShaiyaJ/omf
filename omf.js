@@ -1,3 +1,10 @@
+const entityDecode = document.createElement("textarea");
+
+function entityEval(s) {
+    entityDecode.innerHTML = s;
+    return entityDecode.value;
+}
+
 function filterComment(raw) {
     const DOM = new DOMParser().parseFromString(raw, "text/html"); 
     
@@ -44,9 +51,9 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
 
             // Preprocess HTML string contents (so that {expressions} are evaluated and displayed properly) and append to dom 
             try {
-                DOM.body.innerHTML = this.templateEval(DOM.body.innerHTML);
+                DOM.body.innerHTML = this.templateEval(entityEval(DOM.body.innerHTML));
             } catch (e) {
-                console.log(DOM.body.innerHTML);
+                console.log(entityEval(DOM.body.innerHTML));
                 throw e;
             }
             (DOM.body.childNodes).forEach(n => this.appendChild(n.cloneNode(true)));

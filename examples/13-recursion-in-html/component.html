@@ -1,0 +1,15 @@
+<div>
+    <!-- You can use .map and .join to iterate through given arrays --> 
+    <p>${state.example.map(x => x + "_").join("")}</p>
+    
+    <!-- You can even output HTML - albeit in plain text form -->
+    <!-- It's recommended to only return a single tag in the plain text for readability - if you need more complicated HTML to be returned you can write a component for it and return that instead -->
+    <ol>
+        ${state.example.map(x => `<li>${x}</li>`).join("")}
+    </ol>
+    
+</div>
+
+<script>
+    Object.assign(state, {example: ["a", "b", "c"]});
+</script>
