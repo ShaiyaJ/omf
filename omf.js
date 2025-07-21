@@ -21,11 +21,11 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
     // Create dynamic object
     const dynamicExtend = class DYNAMICEX extends extendTagClass {
         static fetchRan = false;    // Updates to true when fetch runs (not necessarily successfully)
-        static raw = filterComment(fallback);
+        static raw;
 
         constructor() {
             super();
-            this.scriptsRan = false;
+            this.raw = dynamicExtend.raw;
 
             this.state = {};
             this.onRerender = () => {};
@@ -39,23 +39,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
 
 
             // Parse raw contents into a DOM 
-            const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html"); 
-
-
-            // Extract and run scripts and styles
-            const scripts = DOM.querySelectorAll("script");
-            const styles = DOM.querySelectorAll("style");
-
-            if (!this.scriptsRan) {
-                scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state));        // TODO: error handling?
-                
-                styles.forEach(style => document.body.appendChild(style.cloneNode(true)));
-            }
-
-            scripts.forEach(s => s.remove());
-            styles.forEach(s => s.remove());
-
-            this.scriptsRan = dynamicExtend.fetchRan && true;
+            const DOM = new DOMParser().parseFromString(this.raw, "text/html");
 
 
             // Preprocess HTML string contents (so that {expressions} are evaluated and displayed properly) and append to dom 
@@ -74,6 +58,23 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
         
         
         connectedCallback() {
+            const DOM = new DOMParser().parseFromString(this.raw, "text/html");
+            
+            // Extract and run scripts and styles
+            const scripts = DOM.querySelectorAll("script");
+            const styles = DOM.querySelectorAll("style");
+
+            if (!this.scriptsRan) {
+                scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state));        // TODO: error handling?
+                    
+                styles.forEach(style => document.body.appendChild(style.cloneNode(true)));
+            }
+
+            scripts.forEach(s => s.remove());
+            styles.forEach(s => s.remove());
+                
+            this.raw = DOM.body.innerHTML;      // Recache 
+                
             this.rerender();
         }
 
