@@ -1,6 +1,6 @@
 const STATIC_SEPARATE_CONTENT = `
 <div>
-    <p>{state.x}<\/p>
+    <p>\${state.x}<\/p>
     <button class="stateu">+</button>
 <\/div>
 

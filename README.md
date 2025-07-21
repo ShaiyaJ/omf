@@ -8,7 +8,7 @@ One More Framework (or OMF) is a super-lightweight frontend framework that fits 
 
 It was inspired by how components are organised in [Svelte](https://svelte.dev/) and how simple libraries like [Raylib](https://www.raylib.com/) and [Macroquad](https://macroquad.rs/) are for game development.
 
-Most frontend frameworks have a dependency on NPM and, especially for smaller apps, include a *lot* of bloat. OMF aims to be a framework where the source code is so small you can just copy and paste it into a `<script>` tag. 
+Most frontend frameworks have a dependency on NPM and, especially for smaller apps, include a *lot* of bloat. OMF aims to be a framework where the source code is so small you can just copy and paste it into a `<script>` tag. It allows you to develop your website with the only "dependency" being that you have a browser.
 
 ### What do you get?
 Components, with local state, a `.rerender` function and lifecycle hooks `.onRerender` and `.onDestory` (and, in a way, "onCreate").
@@ -18,6 +18,8 @@ That's what you get.
 OMF is built for smaller websites and apps. It's not *impossible* to make larger apps with it, but you'll be expected to provide functionality for things yourself (in a similar philosophy to Raylib and Macroquad). Most noteably **sharing/syncing state between components**. This is what makes OMF so light.
 
 However, there is a silver lining. This means you can choose an approach that works best for your project - rather than relying on what the authors of a framework *think* suits your project best. 
+
+It's probably more accurate to think of OMF as a "DOM-driven micro-framework".
 
 ## Use
 To use OMF, include the source in a `<script>` tag in the `head` of your document. You can do this either by using the Github repo as a `src=` or by copy and pasting the source code directly into it.

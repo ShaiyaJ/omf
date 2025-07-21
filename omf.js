@@ -14,15 +14,27 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             this.state = {};
             this.onRerender = () => {};
             this.onDestroy = () => {};
+            this.templateEval = (t) => new Function("instance", "state", `return \`${t}\`;`)(this, this.state);
         }
 
         rerender() {
             // Clear old content
-            this.innerHTML = "";
+            this.textContent = "";
 
 
-            // Parse raw contents into a DOM
-            const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html");
+            // Parse raw contents into a DOM 
+            const DOM = new DOMParser().parseFromString(dynamicExtend.raw, "text/html"); 
+            
+            // Filter comments out of the DOM (avoids eval errors)
+            const walker = document.createTreeWalker(DOM.body, NodeFilter.SHOW_COMMENT);        // TODO: move this outside and cache the result
+            let node;
+            let commentNodes = [];
+            
+            while (node = walker.nextNode()) {
+                commentNodes.push(node);
+            }
+            
+            commentNodes.forEach(n => n.remove());
 
 
             // Extract and run scripts and styles
@@ -41,16 +53,14 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             this.scriptsRan = dynamicExtend.fetchRan && true;
 
 
-            // Preprocess HTML string contents (so that {expressions} are evaluated and displayed properly) and append to dom
-            (DOM.body.childNodes).forEach(n => {
-                if (n.nodeType == Node.ELEMENT_NODE) {
-                    n.innerHTML = n.innerHTML.replace(/\{([^}]+)\}/g, (_, expr) => {                                        // TODO: error handling?
-                        return new Function("instance", "state", `return (${expr})`)(this, this.state);
-                    });
-                }
-
-                this.appendChild(n.cloneNode(true));
-            });
+            // Preprocess HTML string contents (so that {expressions} are evaluated and displayed properly) and append to dom 
+            try {
+                DOM.body.innerHTML = this.templateEval(DOM.body.innerHTML);
+            } catch (e) {
+                console.log(DOM.body.innerHTML);
+                throw e;
+            }
+            (DOM.body.childNodes).forEach(n => this.appendChild(n.cloneNode(true)));
 
 
             // Run rerender

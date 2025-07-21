@@ -10,7 +10,7 @@
             /* For single page apps, components can be inlined inside a script tag after including omf.js, like so: */
             const STATICCONTENT = `
 <div>
-    <p>{state.x}<\/p>
+    <p>\${state.x}<\/p>                 <!-- NOTE: the backslash is required before $ -->
     <button class="stateu">+</button>
 <\/div>
 
