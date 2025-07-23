@@ -4,7 +4,8 @@
 </div>
 
 <script>
-    /* Sometimes you might want components to have "global state". This is an issue that comes in two parts */
+    /* Sometimes you might want components to have "custom global state". OMF's solution to global state might not solve your issue, or you might want state to be shared between multiple components. */
+    /* This is an issue that comes in two parts */
     
     /* The first part is accessing global state. This could be a shared reference to the same object using Object.assign, or you can do something like this to create a globally accessible state in a place like window: */
     window.state = window.state ? window.state : {x: 0};    // This, of course, comes with the downside of polluting window with a new object

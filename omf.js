@@ -1,6 +1,6 @@
 const e = document.createElement("textarea");
 
-function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
+function component(name, path, {extendTagName = null, sharedState = {}, fallback = ""} = {} ) {
     // Get tag type from extendTagName
     let extendTagClass = extendTagName ? document.createElement(extendTagName).constructor : HTMLElement;
 
@@ -8,6 +8,8 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
     const dynamicExtend = class DYNAMICEX extends extendTagClass {
         static fetchRan = false;    // Updates to true when fetch runs (not necessarily successfully)
         static raw;
+        static instances = [];
+        static sharedState = structuredClone(sharedState);
 
         constructor() {
             super();
@@ -16,7 +18,12 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             this.state = {};
             this.onRerender = () => {};
             this.onDestroy = () => {};
-            this.templateEval = (t) => new Function("instance", "state", `return \`${t}\`;`)(this, this.state);
+            this.templateEval = (t) => new Function("instance", "state", "sharedState", "rerenderAll", `return \`${t}\`;`)(this, this.state, dynamicExtend.sharedState, dynamicExtend.rerenderAll);
+            dynamicExtend.instances.push(this);
+        }
+        
+        static rerenderAll() {
+            dynamicExtend.instances.forEach(i => i.rerender());
         }
 
         rerender() {
@@ -52,7 +59,7 @@ function component(name, path, {extendTagName = null, fallback = ""} = {} ) {
             const scripts = DOM.querySelectorAll("script");
             const styles = DOM.querySelectorAll("style");
 
-            scripts.forEach(script => new Function("instance", "state", script.textContent)(this, this.state));        // TODO: error handling?
+            scripts.forEach(script => new Function("instance", "state", "sharedState", "rerenderAll", script.textContent)(this, this.state, dynamicExtend.sharedState, dynamicExtend.rerenderAll));        // TODO: error handling?
             styles.forEach(style => document.body.appendChild(style.cloneNode(true)));
 
             scripts.forEach(s => s.remove());

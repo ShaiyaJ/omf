@@ -1,0 +1,14 @@
+<div>
+    <p>${sharedState.x}</p>             <!-- Shared state is accessed through sharedState binding -->
+    <button class="stateu">+</button>
+</div>
+
+<script>
+    instance.onRerender = () => {
+        const x = instance.querySelector(".stateu");
+        x.addEventListener("click", () => { 
+            sharedState.x++;    // Shared state is state between a single component - all components share the shared state
+            rerenderAll();      // With this function you will rerender all instances of the component, be careful, as this might invoke a performance hit
+        }); 
+    }
+</script>
