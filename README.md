@@ -1,7 +1,7 @@
 <div align="center">
     <img src="./logoomf.png">
     <h1>🌐 One More Framework 🌐</h1>
-    <p>--A ~100 line JavaScript frontend framework inspired by the likes of Raylib--</p>
+    <p>- A ~100 line JavaScript frontend framework inspired by the likes of Raylib -</p>
 </div>
 
 ## About
